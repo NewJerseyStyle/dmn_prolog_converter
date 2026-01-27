@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "Bidirectional converter between Prolog and DMN (Decision Model and Notation)"
 readme = "README.md"
 authors = [
-    {name = "DMN-Prolog Contributors", email = "noreply@example.com"}
+    {name = "David Xu"}
 ]
 license = {text = "MIT"}
 classifiers = [
@@ -38,10 +38,8 @@ execution = ["cdmn>=0.1.0", "pyswip>=0.2.10"]
 dev = ["pytest>=7.0", "black>=23.0", "mypy>=1.0"]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/dmn-prolog-converter"
-Documentation = "https://github.com/yourusername/dmn-prolog-converter/blob/main/README.md"
-Repository = "https://github.com/yourusername/dmn-prolog-converter"
-Issues = "https://github.com/yourusername/dmn-prolog-converter/issues"
+Homepage = "https://github.com/NewJerseyStyle/dmn-prolog-converter"
+Issues = "https://github.com/NewJerseyStyle/dmn-prolog-converter/issues"
 
 [project.scripts]
 dmn-prolog = "dmn_prolog_converter.cli:main"
