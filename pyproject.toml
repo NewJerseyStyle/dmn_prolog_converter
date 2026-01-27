@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dmn-prolog-converter"
+version = "1.0.0"
+description = "Bidirectional converter between Prolog and DMN (Decision Model and Notation)"
+readme = "README.md"
+authors = [
+    {name = "DMN-Prolog Contributors", email = "noreply@example.com"}
+]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Legal Industry",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Software Development :: Compilers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+keywords = ["prolog", "dmn", "converter", "decision-table", "business-rules"]
+requires-python = ">=3.8"
+dependencies = [
+    "lark>=1.1.9",
+    "lxml>=5.1.0",
+]
+
+[project.optional-dependencies]
+validation = ["cdmn>=0.1.0"]
+execution = ["cdmn>=0.1.0", "pyswip>=0.2.10"]
+dev = ["pytest>=7.0", "black>=23.0", "mypy>=1.0"]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/dmn-prolog-converter"
+Documentation = "https://github.com/yourusername/dmn-prolog-converter/blob/main/README.md"
+Repository = "https://github.com/yourusername/dmn-prolog-converter"
+Issues = "https://github.com/yourusername/dmn-prolog-converter/issues"
+
+[project.scripts]
+dmn-prolog = "dmn_prolog_converter.cli:main"
+dmn2prolog = "dmn_prolog_converter.cli:dmn_to_prolog_cli"
+prolog2dmn = "dmn_prolog_converter.cli:prolog_to_dmn_cli"
+z32dmn = "dmn_prolog_converter.cli:z3_to_dmn_cli"
+dmn2z3 = "dmn_prolog_converter.cli:dmn_to_z3_cli"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["dmn_prolog_converter*"]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+dmn_prolog_converter = ["py.typed"]
