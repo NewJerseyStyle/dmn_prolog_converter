@@ -341,7 +341,7 @@ def version_command() -> int:
         print(f"  pyswip: not installed (Prolog execution disabled)")
 
     print()
-    print("Documentation: https://github.com/yourusername/dmn-prolog-converter")
+    print("Documentation: https://github.com/NewJerseyStyle/dmn-prolog-converter")
 
     return 0
 

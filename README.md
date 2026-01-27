@@ -33,29 +33,14 @@ To ensure DMN compatibility, the converter supports a restricted Prolog subset:
 ## Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/dmn-prolog-convertor.git
-cd dmn-prolog-convertor
+# Basic installation (conversion only)
+pip install dmn-prolog-converter
 
-# Install dependencies
-pip install -r requirements.txt
+# With validation support
+pip install dmn-prolog-converter[validation]
 
-# Or install as package
-pip install -e .
-```
-
-### Optional: cDMN Integration
-
-For DMN validation and execution:
-
-```bash
-pip install cdmn
-```
-
-For Prolog execution comparison:
-
-```bash
-pip install pyswip
+# With all optional features
+pip install dmn-prolog-converter[execution]
 ```
 
 See [CDMN_INTEGRATION.md](CDMN_INTEGRATION.md) for details.
@@ -64,8 +49,15 @@ See [CDMN_INTEGRATION.md](CDMN_INTEGRATION.md) for details.
 
 ### Command Line
 
-After installation, use the CLI:
+After installation, you'll have these commands available:
 
+```bash
+dmn-prolog          # Main CLI tool
+prolog2dmn          # Shortcut: Prolog to DMN
+dmn2prolog          # Shortcut: DMN to Prolog
+```
+
+Example usage
 ```bash
 # Convert Prolog to DMN
 dmn-prolog convert rules.pl rules.dmn

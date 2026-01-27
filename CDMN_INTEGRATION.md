@@ -13,12 +13,14 @@ This guide explains how to use cDMN for validation, execution, and testing of th
 ## Installation
 
 ```bash
-# Install cDMN
-pip install cdmn
+# Install only cDMN with the convertor
+pip install dmn-prolog-convertor[validation]
 
-# Optional: Install PySwip for Prolog execution comparison
-pip install pyswip
+# Optional: Install both cDMN and Prolog execution Python package
+pip install dmn-prolog-convertor[execution]
 ```
+
+> :warning: Installing `dmn-prolog-convertor[execution]` does not automatically install SWI-Prolog to the system, it only enable Python to connect SWI-Prolog if you have installed. Follow instructions of [Installing SWI-Prolog](https://pyswip.readthedocs.io/en/latest/get_started.html#install-swi-prolog) before install us.
 
 ## Features
 
@@ -155,71 +157,7 @@ print(message)
 # Output: Roundtrip validation successful
 ```
 
-## Complete Example
-
-```python
-from src.converter import PrologDMNConverter
-from src.execution.dmn_executor import DMNExecutor
-
-# Step 1: Convert Prolog to DMN (with validation)
-converter = PrologDMNConverter()
-dmn_xml = converter.prolog_to_dmn(
-    "loan_rules.pl",
-    "loan_rules.dmn",
-    validate=True
-)
-
-# Step 2: Execute DMN with test data
-executor = DMNExecutor()
-
-# Applicant data
-applicant_data = {
-    "Credit": 720,
-    "Income": 90000,
-    "Amount": 25000
-}
-
-# Execute decision
-result = executor.execute_decision(
-    "loan_rules.dmn",
-    "eligible_for_loan",
-    applicant_data
-)
-
-print(f"Loan Decision: {result['Result']}")
-# Output: Loan Decision: approved
-
-# Step 3: Test multiple scenarios
-test_scenarios = [
-    {"Credit": 750, "Income": 100000, "Amount": 30000},  # Should approve
-    {"Credit": 680, "Income": 80000, "Amount": 30000},   # Should approve
-    {"Credit": 580, "Income": 50000, "Amount": 20000},   # Should deny
-]
-
-results = executor.batch_execute(
-    "loan_rules.dmn",
-    "eligible_for_loan",
-    test_scenarios
-)
-
-for scenario, result in zip(test_scenarios, results):
-    print(f"Credit: {scenario['Credit']}, Income: ${scenario['Income']:,} "
-          f"→ {result['Result']}")
-```
-
 ## Running Demos
-
-### Basic Demo
-
-```bash
-python demo.py
-```
-
-### Validation & Execution Demo
-
-```bash
-python demo_validation.py
-```
 
 ### Execution Tests
 
@@ -297,27 +235,6 @@ else:
 
 ## Troubleshooting
 
-### cDMN Not Found
-
-```
-Warning: cDMN not installed. Run: pip install cdmn
-```
-
-**Solution:**
-```bash
-pip install cdmn
-```
-
-### PySwip Not Available
-
-For Prolog comparison features:
-
-```bash
-pip install pyswip
-```
-
-**Note:** PySwip requires SWI-Prolog to be installed on your system.
-
 ### Execution Fails
 
 If DMN execution returns `None`:
@@ -383,22 +300,6 @@ results = tester.compare_execution(prolog_path, dmn_path, decision_id, test_case
 report = tester.generate_test_report(results)
 print(report)
 ```
-
-## Benefits of cDMN Integration
-
-1. **Validation**: Catch errors before deployment
-2. **Testing**: Verify rules behave correctly
-3. **Confidence**: Ensure Prolog and DMN are equivalent
-4. **Debugging**: Execute with test data to understand behavior
-5. **Documentation**: Test cases serve as executable documentation
-6. **Regression**: Prevent breaking changes when updating rules
-
-## Next Steps
-
-- Integrate into CI/CD pipeline for automated testing
-- Create comprehensive test suites for your rules
-- Use execution results to generate documentation
-- Build web UI for testing DMN decisions
 
 ## Resources
 

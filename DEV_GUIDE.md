@@ -1,4 +1,4 @@
-# DMN-Prolog Converter - Usage Guide
+# DMN-Prolog Converter - Developer Guide
 
 ## ✅ Status: **Working Prototype**
 
@@ -9,23 +9,12 @@ The bidirectional Prolog ↔ DMN converter is fully functional for the constrain
 ### 1. Installation
 
 ```bash
-# Create virtual environment
-uv venv
-
-# Activate (Windows)
-.venv\Scripts\activate
-
-# Install dependencies
-uv pip install lark lxml
+git clone https://github.dev/NewJerseyStyle/dmn_prolog_converter
+cd dmn_prolog_converter
+pip install -e .[dev]
 ```
 
-### 2. Run Demo
-
-```bash
-python demo.py
-```
-
-### 3. Convert Files
+### 2. Convert Files
 
 ```bash
 # Prolog → DMN
@@ -229,13 +218,6 @@ This tests:
 5. **Visual editor**: Integrated web-based DMN table editor
 
 ## Architecture Notes
-
-### Why This Approach Works
-
-1. **LLM-Friendly**: Prolog is easier for LLMs to generate correctly than verbose DMN XML
-2. **Human-Readable**: DMN decision tables are visual and intuitive for non-programmers
-3. **Lossless**: The constrained Prolog subset maps cleanly to DMN decision tables
-4. **Flexible**: Can deploy in either format based on runtime requirements
 
 ### Technical Stack
 
