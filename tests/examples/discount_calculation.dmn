@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:feel="https://www.omg.org/spec/DMN/20191111/FEEL/" id="PrologModel_definitions" name="PrologModel" namespace="http://example.org/dmn" exporter="Prolog-DMN Converter" exporterVersion="1.0">
+  <decision id="eligible_for_loan" name="Eligible For Loan">
+    <decisionTable id="eligible_for_loan_table" hitPolicy="UNIQUE" outputLabel="eligible_for_loan">
+      <output id="output_Result" label="Result" name="Result" typeRef="string"/>
+      <rule id="rule_1">
+        <outputEntry>
+          <text>approved</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule_2">
+        <outputEntry>
+          <text>approved</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule_3">
+        <outputEntry>
+          <text>conditional</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule_4">
+        <outputEntry>
+          <text>denied</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="calculate_discount" name="Calculate Discount">
+    <decisionTable id="calculate_discount_table" hitPolicy="UNIQUE" outputLabel="calculate_discount">
+      <input id="input_OrderAmount" label="Orderamount">
+        <inputExpression typeRef="string">
+          <text>OrderAmount</text>
+        </inputExpression>
+      </input>
+      <output id="output_Discount" label="Discount" name="Discount" typeRef="string"/>
+      <rule id="rule_1">
+        <inputEntry>
+          <text>-</text>
+        </inputEntry>
+        <outputEntry>
+          <text>20</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule_2">
+        <inputEntry>
+          <text>&gt;= 1000</text>
+        </inputEntry>
+        <outputEntry>
+          <text>15</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule_3">
+        <inputEntry>
+          <text>&lt; 1000</text>
+        </inputEntry>
+        <outputEntry>
+          <text>10</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule_4">
+        <inputEntry>
+          <text>&gt;= 500</text>
+        </inputEntry>
+        <outputEntry>
+          <text>5</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule_5">
+        <inputEntry>
+          <text>&lt; 500</text>
+        </inputEntry>
+        <outputEntry>
+          <text>0</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>

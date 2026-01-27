@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:feel="https://www.omg.org/spec/DMN/20191111/FEEL/" id="Z3Model_definitions" name="Z3Model" namespace="http://example.org/dmn" exporter="Prolog-DMN Converter" exporterVersion="1.0"/>

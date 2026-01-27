@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:feel="https://www.omg.org/spec/DMN/20191111/FEEL/" id="PrologModel_definitions" name="PrologModel" namespace="http://example.org/dmn" exporter="Prolog-DMN Converter" exporterVersion="1.0">
+  <decision id="eligible_for_loan" name="Eligible For Loan">
+    <decisionTable id="eligible_for_loan_table" hitPolicy="UNIQUE" outputLabel="eligible_for_loan">
+      <output id="output_Result" label="Result" name="Result" typeRef="string"/>
+      <rule id="rule_1">
+        <outputEntry>
+          <text>approved</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule_2">
+        <outputEntry>
+          <text>approved</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule_3">
+        <outputEntry>
+          <text>conditional</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule_4">
+        <outputEntry>
+          <text>denied</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>
