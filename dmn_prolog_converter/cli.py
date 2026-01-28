@@ -312,7 +312,7 @@ def info_command(file_path: str) -> int:
 
 def version_command() -> int:
     """Show version information."""
-    print("DMN-Prolog Converter v1.0.0")
+    print("DMN-Prolog Converter v1.0.2")
     print()
     print("Installed packages:")
 

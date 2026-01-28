@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dmn-prolog-converter"
-version = "1.0.1"
+version = "1.0.2"
 description = "Bidirectional converter between Prolog and DMN (Decision Model and Notation)"
 readme = "README.md"
 authors = [
