@@ -89,25 +89,30 @@ class Z3Parser:
         """Parse tokens into S-expressions."""
         expressions = []
         stack = []
-        current = []
+        current = None
 
         for token in tokens:
             if token == '(':
-                stack.append(current)
+                # Start new expression
+                if current is not None:
+                    stack.append(current)
                 current = []
             elif token == ')':
-                if stack:
+                # Complete current expression
+                if current is not None:
                     completed = current
-                    current = stack.pop()
-                    current.append(completed)
-                else:
-                    expressions.append(current)
-                    current = []
+                    if stack:
+                        # Nested expression
+                        current = stack.pop()
+                        current.append(completed)
+                    else:
+                        # Top-level expression
+                        expressions.append(completed)
+                        current = None
             else:
-                current.append(token)
-
-        if current:
-            expressions.append(current)
+                # Add token to current expression
+                if current is not None:
+                    current.append(token)
 
         return expressions
 
@@ -145,28 +150,48 @@ class Z3Parser:
         if not self.assertions:
             return None
 
-        # Group assertions into rules
-        # For now, create one rule per assertion combination
         rules = []
 
-        # Separate conditions from conclusions
-        conditions = []
-        conclusions = []
-
+        # Process each assertion - could be implication or simple condition
         for assertion in self.assertions:
-            if isinstance(assertion, list):
-                cond = self._parse_condition(assertion)
-                if cond:
-                    conditions.append(cond)
+            if isinstance(assertion, list) and len(assertion) > 0:
+                # Check if this is an implication (=> condition conclusion)
+                if assertion[0] == '=>' and len(assertion) >= 3:
+                    # Parse implication as a rule
+                    rule = self._parse_implication(assertion)
+                    if rule:
+                        rules.append(rule)
+                else:
+                    # Simple assertion - add as condition
+                    cond = self._parse_condition(assertion)
+                    if cond:
+                        # Create a rule with only conditions (constraint)
+                        rule = Rule(conditions=[cond], conclusions=[])
+                        rules.append(rule)
 
-        # Create a rule
-        if conditions:
-            rule = Rule(conditions=conditions, conclusions=conclusions)
-            rules.append(rule)
+        # If no rules were created from assertions, create one rule with all conditions
+        if not rules:
+            return None
 
         # Determine inputs and outputs
-        inputs = list(self.variables.values())
+        inputs = []
         outputs = []
+
+        for var in self.variables.values():
+            # Variables that appear in conclusions are outputs
+            is_output = False
+            for rule in rules:
+                for conclusion in rule.conclusions:
+                    if conclusion.variable.name == var.name:
+                        is_output = True
+                        break
+                if is_output:
+                    break
+
+            if is_output:
+                outputs.append(var)
+            else:
+                inputs.append(var)
 
         decision = Decision(
             name="z3_decision",
@@ -176,6 +201,53 @@ class Z3Parser:
         )
 
         return decision
+
+    def _parse_implication(self, expr: List) -> Optional[Rule]:
+        """Parse implication: (=> condition conclusion)."""
+        if not isinstance(expr, list) or len(expr) < 3:
+            return None
+
+        if expr[0] != '=>':
+            return None
+
+        condition_expr = expr[1]
+        conclusion_expr = expr[2]
+
+        # Parse conditions
+        conditions = []
+        if isinstance(condition_expr, list):
+            cond = self._parse_condition(condition_expr)
+            if cond:
+                conditions.append(cond)
+
+        # Parse conclusions
+        conclusions = []
+        if isinstance(conclusion_expr, list):
+            concl = self._parse_conclusion(conclusion_expr)
+            if concl:
+                conclusions.append(concl)
+
+        if conditions or conclusions:
+            return Rule(conditions=conditions, conclusions=conclusions)
+
+        return None
+
+    def _parse_conclusion(self, expr: List) -> Optional[Conclusion]:
+        """Parse conclusion from S-expression (usually = assignment)."""
+        if not isinstance(expr, list) or len(expr) == 0:
+            return None
+
+        op = expr[0]
+
+        # Look for assignments (= variable value)
+        if op == '=' and len(expr) >= 3:
+            # First operand should be the variable
+            if isinstance(expr[1], str) and expr[1] in self.variables:
+                var = self.variables[expr[1]]
+                value = self._parse_term(expr[2])
+                return Conclusion(variable=var, value=value)
+
+        return None
 
     def _parse_condition(self, expr: List) -> Optional[Condition]:
         """Parse condition from S-expression."""
