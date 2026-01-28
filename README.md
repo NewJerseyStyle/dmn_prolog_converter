@@ -1,5 +1,8 @@
 # DMN-Prolog Bidirectional Converter
 
+[![Test DMN-Prolog-Z3 Converter](https://github.com/NewJerseyStyle/dmn_prolog_converter/actions/workflows/test.yml/badge.svg)](https://github.com/NewJerseyStyle/dmn_prolog_converter/actions/workflows/test.yml)
+[![PyPI - Version](https://img.shields.io/pypi/v/dmn-prolog-converter)](https://pypi.org/project/dmn-prolog-converter/)
+
 A Python tool for bidirectional conversion between Prolog code and DMN (Decision Model and Notation) for legal/business rule management.
 
 ## Overview
