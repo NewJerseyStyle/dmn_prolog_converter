@@ -10,6 +10,8 @@ After installation, you have access to these commands:
 dmn-prolog          # Main CLI tool with subcommands
 prolog2dmn          # Quick shortcut: Prolog → DMN
 dmn2prolog          # Quick shortcut: DMN → Prolog
+z32dmn              # Quick shortcut: Z3 → DMN
+dmn2z3              # Quick shortcut: DMN → Z3
 ```
 
 ## Main CLI: dmn-prolog
@@ -175,6 +177,72 @@ Equivalent to:
 dmn-prolog convert tax_rules.dmn tax_rules.pl
 ```
 
+### z32dmn
+
+Quickly convert Z3 SMT-LIB to DMN.
+
+**Syntax:**
+```bash
+z32dmn <input.smt2> <output.dmn>
+```
+
+**Examples:**
+
+```bash
+z32dmn rules.smt2 rules.dmn
+```
+
+Equivalent to:
+```bash
+dmn-prolog convert rules.smt2 rules.dmn
+```
+
+### dmn2z3
+
+Quickly convert DMN to Z3 SMT-LIB.
+
+**Syntax:**
+```bash
+dmn2z3 <input.dmn> <output.smt2>
+```
+
+**Examples:**
+
+```bash
+dmn2z3 rules.dmn rules.smt2
+```
+
+Equivalent to:
+```bash
+dmn-prolog convert rules.dmn rules.smt2
+```
+
+## Z3 SMT-LIB Support
+
+The converter supports Z3 SMT-LIB format for formal verification of decision logic.
+
+### Supported Z3 Conversions
+
+```bash
+# Z3 ↔ DMN
+dmn-prolog convert rules.smt2 rules.dmn   # Z3 → DMN
+dmn-prolog convert rules.dmn rules.smt2   # DMN → Z3
+
+# Z3 ↔ Prolog
+dmn-prolog convert rules.smt2 rules.pl    # Z3 → Prolog
+dmn-prolog convert rules.pl rules.smt2    # Prolog → Z3
+
+# Using shortcuts
+z32dmn rules.smt2 rules.dmn               # Z3 → DMN
+dmn2z3 rules.dmn rules.smt2               # DMN → Z3
+```
+
+### Z3 File Extensions
+
+The converter recognizes these extensions for Z3 files:
+- `.smt2` (preferred)
+- `.smt`
+
 ## Use with Python Module
 
 If the CLI isn't in your PATH, use Python module syntax:
@@ -259,3 +327,4 @@ export DMN_DEFAULT_HIT_POLICY=FIRST
 ## See Also
 
 - [README.md](README.md) - Full documentation
+- [Z3_GUIDE.md](Z3_GUIDE.md) - Detailed Z3 usage
