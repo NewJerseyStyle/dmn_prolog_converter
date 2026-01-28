@@ -55,9 +55,11 @@ See [CDMN_INTEGRATION.md](CDMN_INTEGRATION.md) for details.
 After installation, you'll have these commands available:
 
 ```bash
-dmn-prolog          # Main CLI tool
-prolog2dmn          # Shortcut: Prolog to DMN
-dmn2prolog          # Shortcut: DMN to Prolog
+dmn-prolog          # Main CLI tool with subcommands
+prolog2dmn          # Quick shortcut: Prolog → DMN
+dmn2prolog          # Quick shortcut: DMN → Prolog
+z32dmn              # Quick shortcut: Z3 → DMN
+dmn2z3              # Quick shortcut: DMN → Z3
 ```
 
 Example usage
@@ -73,222 +75,16 @@ dmn-prolog validate rules.dmn
 
 # Show file info
 dmn-prolog info rules.pl
+dmn-prolog info rules.smt2
 
 # Quick shortcuts
 prolog2dmn input.pl output.dmn
 dmn2prolog input.dmn output.pl
+z32dmn input.smt2 output.dmn
+dmn2z3 input.dmn output.smt2
 ```
 
 See [CLI_GUIDE.md](CLI_GUIDE.md) for complete CLI documentation.
-
-### Python API
-
-```python
-from src.converter import PrologDMNConverter
-
-converter = PrologDMNConverter()
-
-# Prolog → DMN (with automatic validation)
-dmn_xml = converter.prolog_to_dmn("input.pl", "output.dmn", validate=True)
-
-# DMN → Prolog
-prolog_code = converter.dmn_to_prolog("input.dmn", "output.pl")
-
-# String-based conversion
-dmn_xml = converter.prolog_string_to_dmn(prolog_code)
-prolog_code = converter.dmn_string_to_prolog(dmn_xml)
-
-# Validate roundtrip conversion
-is_valid, message = converter.validate_roundtrip("input.pl")
-print(message)
-```
-
-### DMN Execution (with cDMN)
-
-```python
-from src.execution.dmn_executor import DMNExecutor
-
-executor = DMNExecutor()
-
-# Execute DMN decision
-inputs = {"Income": 75000}
-result = executor.execute_decision("tax_rules.dmn", "determine_tax_rate", inputs)
-print(f"Tax Rate: {result['TaxRate']}%")
-
-# Test multiple scenarios
-test_cases = [
-    {"Income": 150000},
-    {"Income": 75000},
-    {"Income": 30000}
-]
-results = executor.batch_execute("tax_rules.dmn", "determine_tax_rate", test_cases)
-```
-
-See [CDMN_INTEGRATION.md](CDMN_INTEGRATION.md) for complete guide.
-
-### Command Line
-
-```bash
-# Prolog → DMN
-python -m src.converter input.pl output.dmn
-
-# DMN → Prolog
-python -m src.converter input.dmn output.pl
-
-# Auto-detect based on file extension
-python -m src.converter tax_rules.pl tax_rules.dmn
-
-# Validate roundtrip
-python -m src.converter --validate input.pl
-```
-
-### Quick Demo
-
-```bash
-python demo.py
-```
-
-## Examples
-
-### Example 1: Tax Bracket Decision
-
-**Prolog Input** (`tax_bracket.pl`):
-```prolog
-% Tax Bracket Determination
-determine_tax_rate(Income, TaxRate) :-
-    Income >= 100000,
-    TaxRate = 35.
-
-determine_tax_rate(Income, TaxRate) :-
-    Income >= 50000,
-    Income < 100000,
-    TaxRate = 28.
-
-determine_tax_rate(Income, TaxRate) :-
-    Income < 50000,
-    TaxRate = 15.
-```
-
-**Generated DMN Output**:
-```xml
-<?xml version='1.0' encoding='UTF-8'?>
-<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/"
-             id="PrologModel_definitions"
-             name="PrologModel"
-             namespace="http://example.org/dmn">
-  <decision id="determine_tax_rate" name="Determine Tax Rate">
-    <decisionTable id="determine_tax_rate_table" hitPolicy="UNIQUE">
-      <input id="input_Income" label="Income">
-        <inputExpression typeRef="number">
-          <text>Income</text>
-        </inputExpression>
-      </input>
-      <output id="output_TaxRate" label="Tax Rate" name="TaxRate" typeRef="number"/>
-      <rule id="rule_1">
-        <inputEntry><text>&gt;= 100000</text></inputEntry>
-        <outputEntry><text>35</text></outputEntry>
-      </rule>
-      <rule id="rule_2">
-        <inputEntry><text>&gt;= 50000 and &lt; 100000</text></inputEntry>
-        <outputEntry><text>28</text></outputEntry>
-      </rule>
-      <rule id="rule_3">
-        <inputEntry><text>&lt; 50000</text></inputEntry>
-        <outputEntry><text>15</text></outputEntry>
-      </rule>
-    </decisionTable>
-  </decision>
-</definitions>
-```
-
-### Example 2: Loan Eligibility
-
-See `tests/examples/loan_eligibility.pl` for a more complex example with multiple conditions.
-
-### Example 3: Discount Calculation
-
-See `tests/examples/discount_calculation.pl` for categorical rules.
-
-## Project Structure
-
-```
-dmn-prolog-convertor/
-├── src/
-│   ├── parser/
-│   │   ├── prolog_parser.py    # Parse Prolog → IR (using Lark)
-│   │   └── dmn_parser.py       # Parse DMN → IR (using lxml)
-│   ├── generator/
-│   │   ├── prolog_generator.py # Generate Prolog from IR
-│   │   └── dmn_generator.py    # Generate DMN XML from IR
-│   ├── ir/
-│   │   └── intermediate.py     # Intermediate Representation
-│   └── converter.py            # Main converter API
-├── tests/
-│   ├── test_converter.py       # Integration tests
-│   └── examples/               # Example files
-│       ├── tax_bracket.pl
-│       ├── loan_eligibility.pl
-│       └── discount_calculation.pl
-├── demo.py                     # Quick demo script
-├── requirements.txt            # Dependencies
-├── setup.py                    # Package setup
-└── README.md
-```
-
-## Architecture
-
-### Intermediate Representation (IR)
-
-The converter uses a pivot IR that captures the essential structure of both Prolog and DMN:
-
-- **DecisionModel**: Top-level container
-- **Decision**: A decision (Prolog predicate / DMN decision table)
-- **Rule**: A single rule (Prolog clause / DMN table row)
-- **Condition**: Antecedent (body of Prolog clause / input entry)
-- **Conclusion**: Consequent (head of Prolog clause / output entry)
-- **Expression**: Logical/comparison/arithmetic expression
-- **Variable**: Input/output variable with type information
-- **Literal**: Constant value
-
-### Conversion Pipeline
-
-```
-Prolog Code
-    ↓
-[Prolog Parser] → Uses Lark grammar
-    ↓
-Intermediate Representation (IR)
-    ↓
-[DMN Generator] → Generates XML with lxml
-    ↓
-DMN XML
-```
-
-And vice versa:
-
-```
-DMN XML
-    ↓
-[DMN Parser] → Parses XML with lxml
-    ↓
-Intermediate Representation (IR)
-    ↓
-[Prolog Generator] → Generates Prolog code
-    ↓
-Prolog Code
-```
-
-## Testing
-
-Run the test suite:
-
-```bash
-# Run all tests
-python tests/test_converter.py
-
-# Run specific test
-python -c "from tests.test_converter import test_prolog_to_dmn; test_prolog_to_dmn()"
-```
 
 ## Limitations & Future Work
 
