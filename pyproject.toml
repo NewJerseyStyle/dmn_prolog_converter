@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dmn-prolog-converter"
-version = "1.0.0"
+version = "1.0.1"
 description = "Bidirectional converter between Prolog and DMN (Decision Model and Notation)"
 readme = "README.md"
 authors = [
@@ -19,14 +19,12 @@ classifiers = [
     "Topic :: Software Development :: Compilers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
 keywords = ["prolog", "dmn", "converter", "decision-table", "business-rules"]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
     "lark>=1.1.9",
     "lxml>=5.1.0",
